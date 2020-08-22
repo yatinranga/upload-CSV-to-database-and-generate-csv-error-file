@@ -2,15 +2,24 @@ package com.digilytics.assignment.entity.view;
 
 import java.util.Set;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+
+import com.digilytics.assignment.entity.Role;
+
 public class UserRequest {
 
+	@NotNull(message = "User's name can't be null")
 	private String name;
 
+	@Email(message = "Email pattern isn't correct")
+	@NotNull(message = "User's email can't be null")
 	private String email;
 
+	@NotNull(message = "roles can't be null")
 	private String roles;
 
-	private Set<Long> roleIds;
+	private Set<Role> finalRoles;
 
 	public String getName() {
 		return name;
@@ -36,12 +45,12 @@ public class UserRequest {
 		this.roles = roles;
 	}
 
-	public Set<Long> getRoleIds() {
-		return roleIds;
+	public Set<Role> getFinalRoles() {
+		return finalRoles;
 	}
 
-	public void setRoleIds(Set<Long> roleIds) {
-		this.roleIds = roleIds;
+	public void setFinalRoles(Set<Role> finalRoles) {
+		this.finalRoles = finalRoles;
 	}
 
 }

@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.digilytics.assignment.batch.JobRunner;
+import com.digilytics.assignment.batch.UserProcessor;
+import com.digilytics.assignment.entity.view.DigilyticsResponse;
 
 @RestController
 public class JobController {
@@ -17,9 +19,16 @@ public class JobController {
 	}
 
 	@RequestMapping(value = "/register")
-	public String runJob() {
+	public DigilyticsResponse runJob() {
 		jobRunner.runBatchJob();
-		return String.format("Job Demo1 submitted successfully.");
+		String.format("Job submitted successfully.");
+
+		if (UserProcessor.rowFailed != 0) {
+			return new DigilyticsResponse(UserProcessor.rowParsed, UserProcessor.rowFailed, "/download/errorFile.csv");
+		} else {
+			return new DigilyticsResponse(UserProcessor.rowParsed, UserProcessor.rowFailed);
+		}
+
 	}
 
 }

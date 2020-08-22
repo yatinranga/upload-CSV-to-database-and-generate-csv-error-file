@@ -2,17 +2,14 @@ package com.digilytics.assignment.entity;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Entity
 public class Role {
@@ -23,13 +20,12 @@ public class Role {
 	private Integer id;
 
 	@NotEmpty(message = "name can't be empty")
-	@Column(name = "name")
+	@Column(unique = true)
 	private String name;
 
-	@NotNull
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "user_role", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "role_id") })
+	private Boolean active = true;
+
+	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "roles")
 	private Set<User> users;
 
 	public Integer getId() {
@@ -46,6 +42,14 @@ public class Role {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
 	public Set<User> getUsers() {

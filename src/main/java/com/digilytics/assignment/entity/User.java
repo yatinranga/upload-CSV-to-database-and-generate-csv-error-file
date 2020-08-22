@@ -2,12 +2,14 @@ package com.digilytics.assignment.entity;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 
@@ -25,12 +27,18 @@ public class User {
 	private String name;
 
 	@NotNull(message = "email can't be null")
+	@Column(unique = true)
 	private String email;
+
+	private Boolean active = true;
 
 	@Transient
 	private String role;
 
-	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "users")
+	@NotNull
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "user_role", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "role_id") })
 	private Set<Role> roles;
 
 	public Long getId() {
@@ -71,6 +79,14 @@ public class User {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
 }

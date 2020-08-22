@@ -40,6 +40,7 @@ public class JobRunner {
 
 	public void runJob(Job job, JobParameters parameters) {
 		try {
+			@SuppressWarnings("unused")
 			JobExecution jobExecution = simpleJobLauncher.run(job, parameters);
 		} catch (JobExecutionAlreadyRunningException e) {
 			logger.info("Job with fileName={} is already running.",
