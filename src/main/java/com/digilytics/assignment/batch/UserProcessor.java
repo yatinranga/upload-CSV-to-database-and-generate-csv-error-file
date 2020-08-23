@@ -74,7 +74,7 @@ public class UserProcessor implements ItemProcessor<UserRequest, User> {
 		}
 
 		if (emails == null) {
-			emails = userDao.findAllByActiveTrue();
+			emails = userDao.findAllByActive(true);
 		}
 		if (roleResponseList == null) {
 			roleResponseList = roleDao.findResponseByActive(true);
@@ -107,10 +107,10 @@ public class UserProcessor implements ItemProcessor<UserRequest, User> {
 			} else {
 				if (flag == false) {
 					errorFile = createErrorFile(errorFilePath, "errorFile.csv", userRequest);
-					tempErrors = String.format("Invaid Role %s", role);
+					tempErrors = String.format(", Invaid Role %s", role);
 					flag = true;
 				} else {
-					tempErrors = tempErrors + "#" + String.format("Invaid Role %s ", role);
+					tempErrors = tempErrors + "#" + String.format(", Invaid Role %s ", role);
 				}
 
 				// return null;

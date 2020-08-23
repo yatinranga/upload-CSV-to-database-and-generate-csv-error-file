@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 
 import com.digilytics.assignment.entity.User;
 import com.digilytics.assignment.entity.view.UserRequest;
@@ -45,8 +47,8 @@ public class Demo1 {
 
 	@Bean
 	public Step step1Demo1() throws Exception {
-		return this.stepBuilderFactory.get("step1").<UserRequest, User>chunk(5).reader(employeeReader())
-				.processor(userProcessor).writer(userDBWriter).build();
+		return this.stepBuilderFactory.get("step1").<UserRequest, User>chunk(10).reader(employeeReader())
+				.processor(userProcessor).writer(userDBWriter).taskExecutor(taskExecuter()).build();
 	}
 
 	@Bean
@@ -78,11 +80,17 @@ public class Demo1 {
 		lineTokenizer.setNames(new String[] { "email", "name", "roles" });
 
 		UserFileRowMapper fieldSetMapper = new UserFileRowMapper();
-		// fieldSetMapper.setTargetType(UserRequest.class);
 
 		defaultLineMapper.setLineTokenizer(lineTokenizer);
 		defaultLineMapper.setFieldSetMapper(fieldSetMapper);
 		return defaultLineMapper;
+	}
+
+	@Bean
+	public TaskExecutor taskExecuter() {
+		SimpleAsyncTaskExecutor simpleAsyncTaskExecutor = new SimpleAsyncTaskExecutor();
+		simpleAsyncTaskExecutor.setConcurrencyLimit(5);
+		return simpleAsyncTaskExecutor;
 	}
 
 }
